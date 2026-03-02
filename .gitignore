@@ -35,3 +35,6 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Allow non-sensitive environment tfvars in infra/env
+!infra/env/*.tfvars
