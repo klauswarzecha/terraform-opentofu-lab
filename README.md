@@ -71,3 +71,55 @@ This creates:
 
 ---
 
+## Deploy Infrastructure (Example: dev)
+
+### Terraform:
+
+```bash
+cd infra
+terraform init -reconfigure -backend-config=backend/dev.hcl
+terraform apply -var-file=env/dev.tfvars
+```
+
+### OpenTofu:
+
+```bash
+cd infra
+tofu init -reconfigure -backend-config=backend/dev.hcl
+tofu apply -var-file=env/dev.tfvars
+```
+
+
+## Destroy (Example: dev)
+
+### Terraform:
+
+```bash
+terraform destroy -var-file=env/dev.tfvars
+```
+
+### OpenTofu:
+
+```bash
+tofu destroy -var-file=env/dev.tfvars
+```
+
+---
+
+## Design Decisions
+
+- Remote backend from the beginning
+- State locking enabled (DynamoDB)
+- Explicit environment isolation via backend keys
+- No long-running infrastructure
+- Cost-aware experimentation
+
+---
+
+## Cost Awareness
+
+All resources are:
+
+- Minimal in size
+- Tagged
+- Designed for short-lived testing only
