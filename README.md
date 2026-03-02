@@ -11,7 +11,15 @@ This repository is used to:
 
 The goal is not only certification prep, but disciplined infrastructure engineering.
 
----
+--- 
+
+## Prerequisites
+
+- AWS account
+- AWS credentials configured locally (aws configure or environment variables)
+- Terraform (>= 1.6) or OpenTofu (>= 1.6 compatible)
+
+--- 
 
 ## Tooling
 
@@ -32,7 +40,7 @@ terraform-opentofu-lab/
 - infra/env/     → Environment-specific tfvars
 - infra/backend/ → Backend configuration per environment
 
-Pattern used:
+### Pattern used:
 
 - Single root configuration
 - Multiple tfvars (dev/test/prod)
@@ -68,6 +76,26 @@ This creates:
 
 - S3 bucket for Terraform/OpenTofu state
 - DynamoDB table for state locking
+
+After bootstrap, update the bucket name in:
+
+```bash
+infra/backend/dev.hcl
+infra/backend/test.hcl
+infra/backend/prod.hcl
+```
+
+#### Note
+
+- Backend configuration is __intentionally manual__ and explicit.
+  The S3 bucket name is not injected dynamically.
+
+  This avoids hidden coupling between bootstrap and infra,
+  and keeps backend configuration predictable and transparent.
+
+  Dynamic naming and random suffixes are used only for actual infrastructure,
+  not for the Terraform state backend.
+
 
 ---
 
