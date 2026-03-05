@@ -1,12 +1,7 @@
-resource "random_id" "suffix" {
-  byte_length = 3
-}
-
-locals {
-  bucket_name = "${var.project_name}-data-${lower(random_id.suffix.hex)}"
-}
-
-module "data_bucket" {
-  source      = "../../modules/s3_bucket"
-  bucket_name = local.bucket_name
+module "network" {
+  source              = "../../modules/network_light"
+  name_prefix         = "${var.project_name}-dev"
+  vpc_cidr            = "10.10.0.0/16"
+  public_subnet_cidrs = ["10.10.1.0/24", "10.10.2.0/24"]
+  tags                = var.tags
 }
