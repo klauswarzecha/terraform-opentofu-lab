@@ -2,17 +2,17 @@ resource "aws_vpc" "lab" {
   cidr_block = "10.20.0.0/16"
 
   tags = {
-    Name = "count-vpc-lab"
+    Name = "for-each-vs-count-vpc-lab"
   }
 }
 
-resource "aws_subnet" "count_subnets" {
-  count = length(var.subnet_cidrs)
+resource "aws_subnet" "foreach_subnets" {
+  for_each = var.subnet_cidrs
 
   vpc_id     = aws_vpc.lab.id
-  cidr_block = var.subnet_cidrs[count.index]
+  cidr_block = each.value
 
   tags = {
-    Name = "count-subnet-${count.index}"
+    Name = "foreach-subnet-${each.key}"
   }
 }
