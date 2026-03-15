@@ -7,5 +7,5 @@ variable "aws_region" {
 variable "sg_name" {
   description = "Security group name."
   type        = string
-  default     = "lab-09-sg"
+  default     = "lab-09-sg-renamed"
 }
