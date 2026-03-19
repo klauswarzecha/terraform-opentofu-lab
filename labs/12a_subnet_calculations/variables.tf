@@ -29,4 +29,9 @@ variable "availability_zones" {
     "eu-central-1a",
     "eu-central-1b",
   ]
+
+  validation {
+    condition     = length(var.availability_zones) == var.subnet_count
+    error_message = "The number of availability zones must match the subnet_count"
+  }
 }
