@@ -3,11 +3,6 @@ output "state_bucket_name" {
   value       = aws_s3_bucket.tf_state.bucket
 }
 
-output "lock_table_name" {
-  description = "Name of the DynamoDB table used for state locking."
-  value       = aws_dynamodb_table.tf_lock.name
-}
-
 output "aws_region" {
   description = "AWS region used by this bootstrap stack."
   value       = var.aws_region
