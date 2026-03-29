@@ -1,16 +1,49 @@
 variable "aws_region" {
   description = "The AWS region for the lab."
-  type = string
-  default = "eu-central-1"
+  type        = string
+  default     = "eu-central-1"
 }
 
-variable "bucket_definitions_simple" {
-  description = "Simple definitions of the S3 buckets to create."
+variable "project_name" {
+  type        = string
+  description = "Project name used for naming."
+  default     = "terraform-opentofu-lab"
+}
+
+variable "lab_name" {
+  type        = string
+  description = "Lab name used for tags."
+  default     = "terraform-opentofu-lab"
+}
+
+
+variable "general_buckets_tags" {
   type        = map(string)
+  description = "Tags applied to all lab resources."
   default = {
-    "images"  = "image-storage"
-    "logs"    = "log-storage"
-    "exports" = "export-storage"
+    Project   = "terraform-opentofu-lab"
+    ManagedBy = "terraform"
+    Toolchain = "opentofu"
+    Layer     = "lab"
   }
 }
+
+
+variable "bucket_labels" {
+  description = "Names of the buckets to be created."
+  type        = list(string)
+  default = [
+    "logs",
+    "exports",
+    "screenshots"
+  ]
+}
+
+
+
+
+
+
+
+
 
