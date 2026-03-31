@@ -29,17 +29,26 @@ variable "general_buckets_tags" {
 }
 
 
-variable "bucket_labels" {
-  description = "Names of the buckets to be created."
-  type        = list(string)
-  default = [
-    "logs",
-    "exports",
-    "screenshots"
-  ]
+variable "bucket_definitions" {
+  description = "Definition of all buckets and their properties."
+  type = map(object({
+    tags = map(string)
+  }))
+  default = {
+    "logs" = {
+      tags = {}
+    },
+    "export" = {
+      tags = {}
+    },
+    images = {
+      tags = {}
+    },
+    videos = {
+      tags = {}
+    }
+  }
 }
-
-
 
 
 
