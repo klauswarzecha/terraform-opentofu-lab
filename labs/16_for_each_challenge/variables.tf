@@ -13,9 +13,8 @@ variable "project_name" {
 variable "lab_name" {
   type        = string
   description = "Lab name used for tags."
-  default     = "terraform-opentofu-lab"
+  default     = "lab-16"
 }
-
 
 variable "general_buckets_tags" {
   type        = map(string)
@@ -28,28 +27,17 @@ variable "general_buckets_tags" {
   }
 }
 
-
 variable "bucket_definitions" {
   description = "Definition of all buckets and their properties."
   type = map(object({
     tags = map(string)
   }))
   default = {
-    "logs" = {
-      tags = {}
-    },
-    "export" = {
-      tags = {}
-    },
-    images = {
-      tags = {}
-    },
-    videos = {
-      tags = {}
-    }
+    # "logs" = {
+    #   tags = {}
+    # },   
   }
 }
-
 
 
 
