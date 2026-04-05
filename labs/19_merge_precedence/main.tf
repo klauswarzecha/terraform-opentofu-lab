@@ -9,3 +9,10 @@ resource "aws_s3_bucket" "this" {
   tags     = merge(each.value.tags, var.general_buckets_tags)
 
 }
+
+
+locals {
+
+  keys = keys(var.general_buckets_tags)
+
+}
