@@ -8,3 +8,6 @@ output "bucket_names" {
   }
 }
 
+output "outer" {
+  value = local.keys
+}
