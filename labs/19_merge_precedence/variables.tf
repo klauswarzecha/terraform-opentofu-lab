@@ -59,8 +59,3 @@ variable "bucket_definitions" {
   }
 }
 
-
-
-
-
-

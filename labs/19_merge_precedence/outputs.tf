@@ -8,6 +8,19 @@ output "bucket_names" {
   }
 }
 
-output "outer" {
-  value = local.keys
+
+# output "outer_keys" {
+#   value = local.outer_keys
+# }
+
+# output "inner_keys" {
+#   value = local.inner_keys
+# }
+
+# output "unique_inner_keys" {
+#   value = local.unique_inner_keys
+# }
+
+output "common_keys" {
+  value = local.common_keys
 }
