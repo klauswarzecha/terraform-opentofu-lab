@@ -32,11 +32,7 @@ variable "bucket_definitions" {
   type = map(object({
     tags = map(string)
   }))
-  default = {
-    # "logs" = {
-    #   tags = {}
-    # },   
-  }
+  default = {}
 
   validation {
     condition     = var.bucket_definitions != null
@@ -57,5 +53,16 @@ variable "bucket_definitions" {
     condition     = alltrue([for k, v in var.bucket_definitions : length(k) >= 3])
     error_message = "Each bucket label must be longer than three characters."
   }
-}
 
+  validation {
+    condition = length(
+      setintersection(
+        toset(keys(var.general_buckets_tags)),
+        toset(
+          flatten([for k, v in var.bucket_definitions : keys(v.tags)])
+        )
+      )
+    ) == 0
+    error_message = "Individual bucket tags and general tags cannot be the same."
+  }
+}
