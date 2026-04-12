@@ -17,7 +17,7 @@ The goal is not only certification prep, but disciplined infrastructure engineer
 
 - AWS account
 - AWS credentials configured locally (aws configure or environment variables)
-- Terraform (>= 1.6) or OpenTofu (>= 1.6 compatible)
+- Terraform (>= 1.11) or OpenTofu (>= 1.11 compatible)
 
 --- 
 
@@ -25,28 +25,33 @@ The goal is not only certification prep, but disciplined infrastructure engineer
 
 This project is compatible with:
 
-- Terraform (>= 1.6)
-- OpenTofu (>= 1.6 compatible versions)
+- Terraform (>= 1.11)
+- OpenTofu (>= 1.11 compatible versions)
 
-Both tools use the same configuration syntax and remote backend setup.
+Both tools use the same configuration syntax and remote backend setup. 
+
+It is crucial to use recent versions (> 1.10.0), since these allow state locking in an S3 backend __without__ an 
+additional table in DynamoDB!
 
 ---
 
 ## Repository Structure
 
+```bash
 terraform-opentofu-lab/
-- bootstrap/     → Creates S3 backend + DynamoDB lock table
-- infra/         → Actual infrastructure definitions
-- infra/env/     → Environment-specific tfvars
-- infra/backend/ → Backend configuration per environment
+├── bootstrap/   → creates S3 backend
+├── envs/
+│   ├── dev/     → environment-specific configuration (dev)
+│   └── prod/    → environment-specific configuration (prod)
+├── modules/     → reusable modules (S3, VPC, etc.)
+├── labs/        → independent labs to examine HCL
+```
 
 ### Pattern used:
 
-- Single root configuration
-- Multiple tfvars (dev/test/prod)
-- Remote state in S3
-- DynamoDB state locking
-- No workspaces
+- Environment-based configuration (envs/dev, envs/prod)
+- Remote state in S3 with state locking 
+- No workspaces (explicit environment separation via directories)
 
 ---
 
@@ -75,14 +80,12 @@ tofu apply
 This creates:
 
 - S3 bucket for Terraform/OpenTofu state
-- DynamoDB table for state locking
 
 After bootstrap, update the bucket name in:
 
 ```bash
-infra/backend/dev.hcl
-infra/backend/test.hcl
-infra/backend/prod.hcl
+envs/dev/backend.tf
+envs/prod/backend.tf
 ```
 
 #### Note
@@ -90,55 +93,17 @@ infra/backend/prod.hcl
 - Backend configuration is __intentionally manual__ and explicit.
   The S3 bucket name is not injected dynamically.
 
-  This avoids hidden coupling between bootstrap and infra,
-  and keeps backend configuration predictable and transparent.
+  This avoids hidden coupling between bootstrap and the environments, and keeps backend configuration predictable and transparent.
 
-  Dynamic naming and random suffixes are used only for actual infrastructure,
-  not for the Terraform state backend.
+  Dynamic naming and random suffixes are used only for actual infrastructure, not for the Terraform state backend.
 
 
----
-
-## Deploy Infrastructure (Example: dev)
-
-### Terraform:
-
-```bash
-cd infra
-terraform init -reconfigure -backend-config=backend/dev.hcl
-terraform apply -var-file=env/dev.tfvars
-```
-
-### OpenTofu:
-
-```bash
-cd infra
-tofu init -reconfigure -backend-config=backend/dev.hcl
-tofu apply -var-file=env/dev.tfvars
-```
-
-
-## Destroy (Example: dev)
-
-### Terraform:
-
-```bash
-terraform destroy -var-file=env/dev.tfvars
-```
-
-### OpenTofu:
-
-```bash
-tofu destroy -var-file=env/dev.tfvars
-```
 
 ---
 
 ## Design Decisions
 
 - Remote backend from the beginning
-- State locking enabled (DynamoDB)
-- Explicit environment isolation via backend keys
 - No long-running infrastructure
 - Cost-aware experimentation
 
@@ -151,3 +116,16 @@ All resources are:
 - Minimal in size
 - Tagged
 - Designed for short-lived testing only
+
+
+## Labs
+
+This repository contains a set of small, focused labs exploring specific Terraform/OpenTofu concepts:
+
+- for_each vs count
+- data sources and locals
+- lifecycle rules (prevent_destroy, create_before_destroy)
+- state handling (import, moved, removed)
+- input validation and complex types
+
+Each lab is isolated and designed for incremental learning.
